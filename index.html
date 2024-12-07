@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pixel and Millimeter Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .converter-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .conversion-section {
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 48%;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .result {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pixel and Millimeter Converter</h1>
+    
+    <div class="converter-container">
+        <div class="conversion-section">
+            <h2>Millimeters to Pixels</h2>
+            <label for="mm-input">Millimeters:</label>
+            <input type="number" id="mm-input" placeholder="Enter millimeters">
+            
+            <label for="mm-dpi">DPI:</label>
+            <input type="number" id="mm-dpi" value="96" min="1">
+            
+            <div id="mm-to-px-result" class="result"></div>
+        </div>
+        
+        <div class="conversion-section">
+            <h2>Pixels to Millimeters</h2>
+            <label for="px-input">Pixels:</label>
+            <input type="number" id="px-input" placeholder="Enter pixels">
+            
+            <label for="px-dpi">DPI:</label>
+            <input type="number" id="px-dpi" value="96" min="1">
+            
+            <div id="px-to-mm-result" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        // Millimeters to Pixels Conversion
+        const mmInput = document.getElementById('mm-input');
+        const mmDpiInput = document.getElementById('mm-dpi');
+        const mmToPxResult = document.getElementById('mm-to-px-result');
+
+        // Pixels to Millimeters Conversion
+        const pxInput = document.getElementById('px-input');
+        const pxDpiInput = document.getElementById('px-dpi');
+        const pxToMmResult = document.getElementById('px-to-mm-result');
+
+        function convertMMToPixels(mm, dpi) {
+            // Convert mm to inches, then inches to pixels
+            return (mm / 25.4) * dpi;
+        }
+
+        function convertPixelsToMM(pixels, dpi) {
+            // Convert pixels to inches, then inches to mm
+            return (pixels / dpi) * 25.4;
+        }
+
+        mmInput.addEventListener('input', () => {
+            const mm = parseFloat(mmInput.value);
+            const dpi = parseFloat(mmDpiInput.value);
+            
+            if (!isNaN(mm) && !isNaN(dpi)) {
+                const pixels = convertMMToPixels(mm, dpi);
+                mmToPxResult.textContent = `${mm} mm = ${pixels.toFixed(2)} pixels (at ${dpi} DPI)`;
+            }
+        });
+
+        mmDpiInput.addEventListener('input', () => {
+            // Recalculate when DPI changes, but only if mm input exists
+            if (mmInput.value) {
+                mmInput.dispatchEvent(new Event('input'));
+            }
+        });
+
+        pxInput.addEventListener('input', () => {
+            const pixels = parseFloat(pxInput.value);
+            const dpi = parseFloat(pxDpiInput.value);
+            
+            if (!isNaN(pixels) && !isNaN(dpi)) {
+                const mm = convertPixelsToMM(pixels, dpi);
+                pxToMmResult.textContent = `${pixels} pixels = ${mm.toFixed(2)} mm (at ${dpi} DPI)`;
+            }
+        });
+
+        pxDpiInput.addEventListener('input', () => {
+            // Recalculate when DPI changes, but only if pixels input exists
+            if (pxInput.value) {
+                pxInput.dispatchEvent(new Event('input'));
+            }
+        });
+    </script>
+</body>
+</html>
